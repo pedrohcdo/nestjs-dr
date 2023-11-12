@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"removeComments": true,
+		"module": "commonjs",
+		"target": "es2019",
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"incremental": true,
+		"baseUrl": "./",
+		"outDir": "./dist",
+		"paths": {
+			"nestjs-dr": [
+				"lib/src"
+			],
+			"nestjs-dr/*": [
+				"lib/src/*"
+			],
+			"test-utils": [
+				"test-utils/src"
+			],
+			"test-utils/*": [
+				"test-utils/src/*"
+			],
+		}
+	},
+}

@@ -1,0 +1,99 @@
+{
+  "name": "nestjs-dr",
+  "version": "1.1.6",
+  "author": "Pedro Henrique C. (pedrohcdo)",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrohcdo/nestjs-dr"
+  },
+  "scripts": {
+    "test": "jest",
+    "prepare": "husky install",
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "publish-library": "npm run prebuild && nest build nestjs-dr && npm publish --access public",
+    "start:test-project": "NODE_ENV=development nest start test --debug --watch"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^8.0.0 || ^9.0.0 || ^10.0.0",
+    "@nestjs/config": "^1.0.0 || ^2.0.0",
+    "@nestjs/core": "^8.0.0 || ^9.0.0 || ^10.0.0",
+    "@nestjs/platform-express": "^8.0.0 || ^9.0.0 || ^10.0.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.5.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.0",
+    "@commitlint/config-conventional": "^17.2.0",
+    "@nestjs/cli": "^9.2.0",
+    "@nestjs/schematics": "^9.0.3",
+    "@nestjs/swagger": "^6.0.5",
+    "@nestjs/testing": "^9.2.1",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^28.1.8",
+    "@types/lodash": "^4.14.189",
+    "@types/node": "^18.7.4",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "^0.14.0",
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.1.0",
+    "husky": "^8.0.2",
+    "jest": "^29.0.3",
+    "joi": "^17.6.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.21",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.3",
+    "ts-loader": "^9.4.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "roots": [
+      "lib/src",
+      "test/src"
+    ],
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "nestjs-dr": [
+        "<rootDir>/lib/src"
+      ],
+      "nestjs-dr/*": [
+        "<rootDir>/lib/src/*"
+      ],
+      "test-utils": [
+        "<rootDir>/test-utils/src"
+      ],
+      "test-utils/*": [
+        "<rootDir>/test-utils/src/*"
+      ]
+    }
+  }
+}

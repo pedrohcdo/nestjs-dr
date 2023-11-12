@@ -1,0 +1,4 @@
+interface GenericService {
+
+    execute(): string;
+}
