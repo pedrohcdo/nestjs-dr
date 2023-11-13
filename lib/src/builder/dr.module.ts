@@ -1,17 +1,19 @@
 import { Module, DynamicModule, Type, ModuleMetadata, Provider } from "@nestjs/common";
 import _ from "lodash";
-import { ResolverProviderFactory } from "./providers/resolve.provider";
+import { ResolverProviderFactory } from "../providers";
+import { DependencyResolverService } from "./dr-service.base";
 
 export interface DependencyResolutionRegister extends Omit<ModuleMetadata, "providers"> {
+
     module?: Type<any>
     superModule?: DynamicModule
-    providers?: (Provider | Type)[]
+    providers?: (Provider | typeof DependencyResolverService)[]
 }
 
 @Module({})
-export class DependencyResolutionModule {
+export class DependencyResolutionWrapperModule {
 
-    static holder({
+    static wrap({
         module,
         controllers,
         imports,
@@ -19,13 +21,13 @@ export class DependencyResolutionModule {
         exports,
         superModule
     }: DependencyResolutionRegister): DynamicModule {
-        const resolvers: Type[] = providers
-            .filter((resolver) => typeof resolver === 'function' && (resolver as any)?.qualifiers && typeof (resolver as any).qualifiers === 'function') as Type[]
+        const resolvers: (typeof DependencyResolverService)[] = providers
+            .filter((resolver) => typeof resolver === 'function' && (resolver as any)?.qualifiers && typeof (resolver as any).qualifiers === 'function') as (typeof DependencyResolverService)[]
 
-        const resolverProviders = resolvers.map((resolver) => ResolverProviderFactory(resolver.name, { primary: null }))
+        const resolverProviders = resolvers.map((resolver) => ResolverProviderFactory(resolver.name, resolver.qualifiers()))
         const qualifierDependencies: Type[] = resolvers.reduce(
-            (dependencies: Type[], resolver: Type): Type[] => {
-                return [...dependencies, ...Object.values({} as Type)]
+            (dependencies: Type[], resolver: typeof DependencyResolverService): Type[] => {
+                return [...dependencies, ...Object.values(resolver.qualifiers())]
             },
             []
         )
@@ -34,7 +36,7 @@ export class DependencyResolutionModule {
 
         // 
         superModule ||= {
-            module: module || DependencyResolutionModule,
+            module: module || DependencyResolutionWrapperModule,
             controllers: [],
             imports: [],
             providers: [],
@@ -48,7 +50,7 @@ export class DependencyResolutionModule {
 
         //
         return {
-            module: module || DependencyResolutionModule,
+            module: module || DependencyResolutionWrapperModule,
             controllers,
             imports,
             providers: [
@@ -65,7 +67,7 @@ export class DependencyResolutionModule {
 }
 
 export function RModule(metadata: ModuleMetadata): ClassDecorator {
-    const holder = DependencyResolutionModule.holder(metadata)
+    const holder = DependencyResolutionWrapperModule.wrap(metadata)
     return Module({
         controllers: holder.controllers,
         imports: holder.imports,
